@@ -14,9 +14,11 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class DebitCardTransactionController extends BaseController
 {
+    use AuthorizesRequests;
     /**
      * Get debit card transactions list
      *
@@ -26,7 +28,8 @@ class DebitCardTransactionController extends BaseController
      */
     public function index(DebitCardTransactionShowIndexRequest $request): JsonResponse
     {
-        $debitCard = DebitCard::find($request->input('debit_card_id'));
+      $debitCard = DebitCard::find($request->input('debit_card_id'));
+      $this->authorize('view', $debitCard);
 
         $debitCardTransactions = $debitCard
             ->debitCardTransactions()
@@ -45,13 +48,17 @@ class DebitCardTransactionController extends BaseController
     public function store(DebitCardTransactionCreateRequest $request)
     {
         $debitCard = DebitCard::find($request->input('debit_card_id'));
+        $this->authorize('create', $debitCard);
 
         $debitCardTransaction = $debitCard->debitCardTransactions()->create([
             'amount' => $request->input('amount'),
             'currency_code' => $request->input('currency_code'),
         ]);
 
-        return response()->json(new DebitCardTransactionResource($debitCardTransaction), HttpResponse::HTTP_CREATED);
+        return response()->json([
+            'message' => 'Debit card transaction created successfully',
+            'data' => new DebitCardTransactionResource($debitCardTransaction),
+        ], HttpResponse::HTTP_CREATED);
     }
 
     /**
@@ -64,6 +71,7 @@ class DebitCardTransactionController extends BaseController
      */
     public function show(DebitCardTransactionShowRequest $request, DebitCardTransaction $debitCardTransaction)
     {
+        $this->authorize('view', $debitCardTransaction);
         return response()->json(new DebitCardTransactionResource($debitCardTransaction), HttpResponse::HTTP_OK);
     }
 }

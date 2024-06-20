@@ -12,14 +12,6 @@ class DebitCardShowRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize(): bool
-    {
-        if ($this->route('debitCard')) {
-            return $this->user()->can('view', $this->route('debitCard'));
-        }
-
-        return $this->user()->can('view', DebitCard::class);
-    }
 
     /**
      * Get the validation rules that apply to the request.

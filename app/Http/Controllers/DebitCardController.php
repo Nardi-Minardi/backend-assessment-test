@@ -12,9 +12,11 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class DebitCardController extends BaseController
 {
+    use AuthorizesRequests;
     /**
      * Get active debit cards list
      *
@@ -47,7 +49,11 @@ class DebitCardController extends BaseController
             'expiration_date' => Carbon::now()->addYear(),
         ]);
 
-        return response()->json(new DebitCardResource($debitCard), HttpResponse::HTTP_CREATED);
+        return response()->json([
+            'message' => 'Debit card created successfully',
+            'data' => new DebitCardResource($debitCard),
+        ], HttpResponse::HTTP_CREATED);
+
     }
 
     /**
@@ -60,7 +66,8 @@ class DebitCardController extends BaseController
      */
     public function show(DebitCardShowRequest $request, DebitCard $debitCard)
     {
-        return response()->json(new DebitCardResource($debitCard), HttpResponse::HTTP_OK);
+      $this->authorize('view', $debitCard);
+      return response()->json(new DebitCardResource($debitCard), HttpResponse::HTTP_OK);
     }
 
     /**
@@ -73,11 +80,15 @@ class DebitCardController extends BaseController
      */
     public function update(DebitCardUpdateRequest $request, DebitCard $debitCard)
     {
+        $this->authorize('update', $debitCard);
         $debitCard->update([
             'disabled_at' => $request->input('is_active') ? null : Carbon::now(),
         ]);
 
-        return response()->json(new DebitCardResource($debitCard), HttpResponse::HTTP_OK);
+        return response()->json([
+            'message' => 'Debit card updated',
+            'data' => new DebitCardResource($debitCard),
+        ], HttpResponse::HTTP_OK);
     }
 
     /**
@@ -91,8 +102,14 @@ class DebitCardController extends BaseController
      */
     public function destroy(DebitCardDestroyRequest $request, DebitCard $debitCard)
     {
+        $this->authorize('delete', $debitCard);
+        $debitCard = $request->user()->debitCards()->find($debitCard->id);
+        if (!$debitCard) {
+          return response()->json(['message' => 'Debit card not found'], HttpResponse::HTTP_NOT_FOUND);
+        }
+        
         $debitCard->delete();
 
-        return response()->json([], HttpResponse::HTTP_NO_CONTENT);
+        return response()->json(['message' => 'Debit card deleted'], HttpResponse::HTTP_OK);
     }
 }

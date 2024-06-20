@@ -16,6 +16,9 @@ class CreateReceivedRepaymentsTable extends Migration
         Schema::create('received_repayments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('loan_id');
+            $table->unsignedBigInteger('scheduled_repayment_id')->nullable();
+            $table->bigInteger('amount');
+            $table->timestamp('received_at')->useCurrent();
 
             // TODO: Add missing columns here
 

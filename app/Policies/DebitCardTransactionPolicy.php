@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Polocies;
+namespace App\Policies;
 
 use App\Models\DebitCard;
 use App\Models\DebitCardTransaction;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 /**
  * Class DebitCardTransactionPolicy
@@ -22,9 +23,11 @@ class DebitCardTransactionPolicy
      *
      * @return bool
      */
-    public function view(User $user, DebitCardTransaction $debitCardTransaction): bool
+    public function view(User $user, DebitCardTransaction $debitCardTransaction): Response
     {
-        return $user->is($debitCardTransaction->debitCard->user);
+        return $user->is($debitCardTransaction->debitCard->user)
+            ? Response::allow()
+            : Response::deny('You do not own this debit card transaction.');
     }
 
     /**
@@ -35,8 +38,10 @@ class DebitCardTransactionPolicy
      *
      * @return bool
      */
-    public function create(User $user, DebitCard $debitCard): bool
+    public function create(User $user, DebitCard $debitCard): Response
     {
-        return $user->is($debitCard->user);
+        return $user->is($debitCard->user) 
+            ? Response::allow()
+            : Response::deny('You do not own this debit card.');
     }
 }

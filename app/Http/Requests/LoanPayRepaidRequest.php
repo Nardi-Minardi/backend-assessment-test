@@ -3,10 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Models\DebitCard;
-use App\Models\DebitCardTransaction;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Models\Loan;
 
-class DebitCardTransactionShowRequest extends FormRequest
+class LoanPayRepaidRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,6 +22,13 @@ class DebitCardTransactionShowRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'loan_id' => [
+                'required',
+                'exists:loans,id',
+            ],
+            'amount' => 'required|numeric|min:1',
+            'receive_at' => 'date_format:Y-m-d H:i:s',
+        ];
     }
 }

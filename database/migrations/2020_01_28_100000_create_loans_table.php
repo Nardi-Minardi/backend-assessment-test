@@ -16,12 +16,11 @@ class CreateLoansTable extends Migration
         Schema::create('loans', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->integer('amount');
+            $table->bigInteger('amount');
             $table->integer('terms');
-            $table->integer('outstanding_amount');
             $table->string('currency_code');
             $table->date('processed_at');
-            $table->string('status');
+            $table->enum('status', ['due', 'partial', 'repaid'])->default('due');
             $table->timestamps();
             $table->softDeletes();
 

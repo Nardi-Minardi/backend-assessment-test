@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+        
     }
 
     /**
@@ -33,4 +34,5 @@ class CreateUsersTable extends Migration
     {
         Schema::dropIfExists('users');
     }
+    
 }

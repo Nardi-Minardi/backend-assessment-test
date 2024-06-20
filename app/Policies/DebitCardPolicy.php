@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Polocies;
+namespace App\Policies;
 
 use App\Models\DebitCard;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 /**
  * Class DebitCardPolicy
@@ -21,13 +22,15 @@ class DebitCardPolicy
      *
      * @return bool
      */
-    public function view(User $user, ?DebitCard $debitCard = null): bool
+    public function view(User $user, ?DebitCard $debitCard = null): Response
     {
         if (!$debitCard) {
-            return true;
+            return Response::allow();
         }
 
-        return $user->is($debitCard->user);
+        return $user->is($debitCard->user)
+            ? Response::allow()
+            : Response::deny('You do not own this Debit Card');
     }
 
     /**
@@ -50,9 +53,11 @@ class DebitCardPolicy
      *
      * @return bool
      */
-    public function update(User $user, DebitCard $debitCard): bool
+    public function update(User $user, DebitCard $debitCard): Response
     {
-        return $user->is($debitCard->user);
+        return $user->is($debitCard->user) 
+            ? Response::allow()
+            : Response::deny('You do not own this Debit Card');
     }
 
     /**
@@ -63,9 +68,11 @@ class DebitCardPolicy
      *
      * @return bool
      */
-    public function delete(User $user, DebitCard $debitCard): bool
+    public function delete(User $user, DebitCard $debitCard): Response
     {
         return $user->is($debitCard->user)
-            && $debitCard->debitCardTransactions()->doesntExist();
+            // && $debitCard->debitCardTransactions()->doesntExist() 
+            ? Response::allow()
+            : Response::deny('You do not own this Debit Card');
     }
 }

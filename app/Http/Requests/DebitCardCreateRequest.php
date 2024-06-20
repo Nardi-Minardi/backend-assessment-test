@@ -12,10 +12,6 @@ class DebitCardCreateRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize(): bool
-    {
-        return $this->user()->can('create', DebitCard::class);
-    }
 
     /**
      * Get the validation rules that apply to the request.
