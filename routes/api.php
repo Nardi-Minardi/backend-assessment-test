@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')
     ->group(function () {
         // Debit card endpoints
+        Route::get('test', function () {
+            return response()->json(['message' => 'Hello World!']);
+        });
         Route::get('debit-cards', [DebitCardController::class, 'index']);
         Route::post('debit-cards', [DebitCardController::class, 'store']);
         Route::get('debit-cards/{debitCard}', [DebitCardController::class, 'show']);
