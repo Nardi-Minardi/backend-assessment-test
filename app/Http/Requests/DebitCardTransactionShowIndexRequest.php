@@ -22,7 +22,7 @@ class DebitCardTransactionShowIndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'debit_card_id' => 'required|integer|exists:debit_cards,id',
+            'debit_card_id' => 'integer|exists:debit_cards,id',
         ];
     }
 }

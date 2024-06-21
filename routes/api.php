@@ -34,7 +34,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::delete('debit-cards/{debitCard}', [DebitCardController::class, 'destroy']);
 
         // Debit card transactions endpoints
-        Route::get('debit-card-transactions', [DebitCardTransactionController::class, 'index']);
+        Route::get('debit-card-transactions/{debitCardId}', [DebitCardTransactionController::class, 'index']);
         Route::post('debit-card-transactions', [DebitCardTransactionController::class, 'store']);
         Route::get('debit-card-transactions/{debitCardTransaction}', [DebitCardTransactionController::class, 'show']);
 

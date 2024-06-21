@@ -9,7 +9,9 @@
 7. run `php artisan db:seed`
 8. run `php artisan passport:install`
 9. run `php artisan passport:client --personal`
-10. run `php artisan serve`
+10. run `php artisan test --filter DebitCardControllerTest`
+11. run `php artisan test --filter DebitCardTransactionControllerTest`
+12. run `php artisan serve`
 
 ### Note
 To import the postman collection, you can import all the collection from folder `minardi_collection`
