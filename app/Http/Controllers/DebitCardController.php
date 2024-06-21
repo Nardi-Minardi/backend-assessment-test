@@ -51,7 +51,7 @@ class DebitCardController extends BaseController
 
         return response()->json([
             'message' => 'Debit card created successfully',
-            'data' => new DebitCardResource($debitCard),
+            // 'data' => $debitCard,
         ], HttpResponse::HTTP_CREATED);
 
     }
@@ -87,7 +87,7 @@ class DebitCardController extends BaseController
 
         return response()->json([
             'message' => 'Debit card updated',
-            'data' => new DebitCardResource($debitCard),
+            // 'data' => new DebitCardResource($debitCard),
         ], HttpResponse::HTTP_OK);
     }
 
